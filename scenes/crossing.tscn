@@ -42,15 +42,15 @@ mesh = SubResource("CylinderMesh_cls7n")
 surface_material_override/0 = SubResource("StandardMaterial3D_liotj")
 
 [node name="LightColor2" type="MeshInstance3D" parent="kryds"]
-transform = Transform3D(0.00216417, -0.999998, 0, 0.999998, 0.00216417, 0, 0, 0, 1, 1.9282, 2.91559, 5.10481)
+transform = Transform3D(-2.96807e-05, 0.00733024, 0.999973, -0.999992, -0.00404905, -2.85135e-11, 0.00404894, -0.999965, 0.00733029, -4.3549, 2.91207, 1.58466)
 mesh = SubResource("CylinderMesh_cls7n")
-skeleton = NodePath("../LightColor")
+skeleton = NodePath("../LightColor3")
 surface_material_override/0 = SubResource("StandardMaterial3D_liotj")
 
 [node name="LightColor3" type="MeshInstance3D" parent="kryds"]
-transform = Transform3D(-2.96807e-05, 0.00733024, 0.999973, -0.999992, -0.00404905, -2.85135e-11, 0.00404894, -0.999965, 0.00733029, -4.3549, 2.91207, 1.58466)
+transform = Transform3D(0.00216417, -0.999998, 0, 0.999998, 0.00216417, 0, 0, 0, 1, 1.9282, 2.91559, 5.10481)
 mesh = SubResource("CylinderMesh_cls7n")
-skeleton = NodePath("../LightColor2")
+skeleton = NodePath("../LightColor")
 surface_material_override/0 = SubResource("StandardMaterial3D_liotj")
 
 [node name="LightColor4" type="MeshInstance3D" parent="kryds"]
