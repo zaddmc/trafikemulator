@@ -72,7 +72,7 @@ func update_car(delta: float) -> void:
 	if (not is_light_green # If the crossing is red, hold back
 	#or not shortest_incoming # If there is anyone in the crossing, that will intersect it # it shouldnt be neccesary due to next line
 	or crossings_contains_invalid_cars): # if there is cars in the crossing
-		slow_down()
+		slow_down(delta)
 
 	elif (shortest_distance - self.get_progress() < wanted_space * 2 and shortest_distance - self.get_progress() > wanted_space and self.speed > 2):
 		self.speed = self.speed -0.2
@@ -100,24 +100,28 @@ func update_car(delta: float) -> void:
 		change_road(ROAD_DICT[current_road].pick_random())
 	return
 
-var de_acceleration = [1]
+var de_acceleration # def = [0.9, 0.1] # First part of acceleration is multiplier and second is constant aswell as the minimum value before flatlining zero
 func de_acceleration_curve(delta:float, x:float):
-	return 
+	var new_speed = x * de_acceleration[0] + de_acceleration[1]
+	if new_speed >= de_acceleration[1]:
+		return new_speed
+	else:
+		return 0
 
-func slow_down():
+func slow_down(delta:float):
 	
 	
 	return 
 
-var acceleration = [1.1, 0.1] # First part of acceleration is multiplier and second is constant
+var acceleration # def = [1.1, 0.1] # First part of acceleration is multiplier and second is constant
 func acceleration_curve(delta:float, x:float) -> float:
-	var new_speed = x * 1.1 + 0.1
+	var new_speed = x * acceleration[0] + acceleration[1]
 	if new_speed <= max_speed:
 		return new_speed
 	else:
 		return max_speed
 
-func speed_up():
+func speed_up(delta:float):
 	
 	
 	return 
@@ -138,27 +142,33 @@ func change_road(new_road:Path3D):
 
 	return
 
-static func new_car(road:Path3D, starting_offset:float = 0, max_speed:float = 0, wanted_space:float = 2) -> Car:
-	var new_car: Car = my_scene.instantiate()
-	road.add_child(new_car)
-	new_car.current_road = road
-	new_car.change_road(road)
+# Intializer for new car objects/nodes
+static func new_car(road_:Path3D, starting_offset_:float = 0, wanted_space_:float = 2, 
+max_speed_:float = 0, acceleration_ = [1.1, 0.1], de_acceleration_: = [0.9, 0.1]) -> Car:
+	var new_car_: Car = my_scene.instantiate()
+	road_.add_child(new_car_)
+	new_car_.current_road = road_
+	new_car_.change_road(road_)
 	
-	new_car.wanted_space = wanted_space
+	new_car_.set_progress(starting_offset_) 
 	
-	new_car.set_progress(starting_offset) 
+	new_car_.wanted_space = wanted_space_
 	
-	if (max_speed == 0):
-		new_car.max_speed = randf_range(5, 15)
+	if (max_speed_ == 0):
+		new_car_.max_speed = randf_range(5, 15)
 	else:
-		new_car.max_speed = max_speed
-	new_car.speed = new_car.max_speed
+		new_car_.max_speed = max_speed_
+	new_car_.speed = new_car_.max_speed
 	
-	new_car.loop = false
+	new_car_.acceleration = acceleration_
+	new_car_.de_acceleration = de_acceleration_
 	
-	CARS.append(new_car)
-	return new_car
+	new_car_.loop = false
+	
+	CARS.append(new_car_)
+	return new_car_
 
+# Import road dictionaries from road baker
 static func set_baked_roads(road_dict, inv_road_dict) -> void:
 	ROAD_DICT = road_dict
 	INV_ROAD_DICT = inv_road_dict

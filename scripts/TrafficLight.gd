@@ -6,7 +6,7 @@ var light_dic = {}
 var current_light = 0
 var material_green = StandardMaterial3D.new()
 var material_red = StandardMaterial3D.new()#selects which road to let through
-# Called when the node enters the scene tree for the first time.
+
 func start() -> void:
 	material_green.albedo_color = Color(0,1,0)
 	material_red.albedo_color = Color(1,0,0)
@@ -14,9 +14,9 @@ func start() -> void:
 	timer.timeout.connect(update_trafficlight)
 	roads = get_children()
 	roads.remove_at(roads.size()-1)
-	for n in roads:
-		light_dic[n] = false
-		n.get_child(-1).get_child(0).set_surface_override_material(0, material_red)
+	for road in roads:
+		light_dic[road] = false
+		road.get_child(-1).get_child(0).set_surface_override_material(0, material_red)
 
 func update_trafficlight():
 	light_dic[roads[current_light]] = false
