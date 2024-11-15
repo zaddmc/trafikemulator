@@ -7,7 +7,7 @@
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_x7um8")
 car_spawn_count = 200
-wanted_space = 3.48
+wanted_space = 7.0
 lights_on = true
 
 [node name="Camera3D" type="Camera3D" parent="."]
@@ -21,7 +21,7 @@ light_energy = 2.185
 directional_shadow_max_distance = 8192.0
 
 [node name="road_mesh" parent="." instance=ExtResource("2_n6a5q")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.099, -0.135, -14.473)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.099, -0.135, -15.113)
 
 [node name="road_paths" parent="." instance=ExtResource("3_0mlr0")]
 

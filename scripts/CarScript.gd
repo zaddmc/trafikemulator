@@ -17,6 +17,7 @@ var cars_on_same_road = []
 var closest_car = null
 var wanted_space:float
 
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func update_car(delta: float) -> void:
 	var current_road_length = current_road.get_curve().get_baked_length()
@@ -64,21 +65,25 @@ func update_car(delta: float) -> void:
 	if crossing.is_in_group("TrafficLights"):
 		is_light_green = crossing.call("get_status", crossing_own_section)
 	
+	#=================================
 	# Logic for speed settings
-	if (distance_to_crossing < wanted_space and not is_light_green 
-		or not shortest_incoming 
-		or distance_to_crossing < wanted_space and crossings_contains_invalid_cars):
-		self.speed = 0
-		
-	elif shortest_distance - self.get_progress() < wanted_space * 2 and shortest_distance - self.get_progress() > wanted_space and self.speed > 2:
+	#=================================
+	# Stop for light crossing, given different conditions
+	if (not is_light_green # If the crossing is red, hold back
+	#or not shortest_incoming # If there is anyone in the crossing, that will intersect it # it shouldnt be neccesary due to next line
+	or crossings_contains_invalid_cars): # if there is cars in the crossing
+		slow_down()
+
+	elif (shortest_distance - self.get_progress() < wanted_space * 2 and shortest_distance - self.get_progress() > wanted_space and self.speed > 2):
 		self.speed = self.speed -0.2
-		
+
+
 	elif shortest_distance - self.get_progress() < wanted_space:
 		if self.speed > 1.5:
 			self.speed *= 0.6*delta
 		elif self.speed <= 1:
 			self.speed = 0
-			
+
 	else:
 		if self.speed < 1:
 			self.speed = 1
@@ -87,11 +92,35 @@ func update_car(delta: float) -> void:
 		else:
 			self.speed = self.max_speed
 
+	# Update distance on road
+	self.set_progress(self.get_progress() + speed * delta)
+
+	# Change to next segment of road, at the end
 	if self.get_progress_ratio() >= 0.99:
 		change_road(ROAD_DICT[current_road].pick_random())
-
-	self.set_progress(self.get_progress()+delta*speed)
 	return
+
+var de_acceleration = [1]
+func de_acceleration_curve(delta:float, x:float):
+	return 
+
+func slow_down():
+	
+	
+	return 
+
+var acceleration = [1.1, 0.1] # First part of acceleration is multiplier and second is constant
+func acceleration_curve(delta:float, x:float) -> float:
+	var new_speed = x * 1.1 + 0.1
+	if new_speed <= max_speed:
+		return new_speed
+	else:
+		return max_speed
+
+func speed_up():
+	
+	
+	return 
 
 func change_road(new_road:Path3D):
 	self.reparent(new_road)

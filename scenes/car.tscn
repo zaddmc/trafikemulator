@@ -8,4 +8,4 @@ transform = Transform3D(0.999943, 0, 0, 0, 0.99995, 0, 0, 0, 0.999958, 0, 0, 0.0
 script = ExtResource("1_2aw4a")
 
 [node name="carmodel2" parent="." instance=ExtResource("2_335if")]
-transform = Transform3D(-3.49691e-09, 0, -0.08, 0, 0.08, 0, 0.08, 0, -3.49691e-09, 0.0185097, 0, -0.112033)
+transform = Transform3D(-6.11959e-09, 0, -0.14, 0, 0.14, 0, 0.14, 0, -6.11959e-09, 0.0185097, 0, -0.112033)
