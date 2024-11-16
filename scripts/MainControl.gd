@@ -17,9 +17,6 @@ func _on_all_loaded():
 	roads.assign_traffic_lights(light_time, lights_on)
 	return
 
-
-
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	update_cars(delta)

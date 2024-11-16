@@ -100,31 +100,41 @@ func update_car(delta: float) -> void:
 		change_road(ROAD_DICT[current_road].pick_random())
 	return
 
+#¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
+# Functions related to speed manegement
+#¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
+
 var de_acceleration # def = [0.9, 0.1] # First part of acceleration is multiplier and second is constant aswell as the minimum value before flatlining zero
-func de_acceleration_curve(delta:float, x:float):
-	var new_speed = x * de_acceleration[0] + de_acceleration[1]
+func de_acceleration_curve(delta:float, current_speed:float) -> float:
+	var new_speed = current_speed * de_acceleration[0] + de_acceleration[1]
 	if new_speed >= de_acceleration[1]:
 		return new_speed
 	else:
 		return 0
 
-func slow_down(delta:float):
-	
-	
-	return 
+func slow_down(delta:float) -> bool:
+	"""Returns true if it changed speed"""
+	var old_speed = self.speed
+	self.speed = de_acceleration_curve(delta, old_speed)
+	return old_speed != self.speed
 
 var acceleration # def = [1.1, 0.1] # First part of acceleration is multiplier and second is constant
-func acceleration_curve(delta:float, x:float) -> float:
-	var new_speed = x * acceleration[0] + acceleration[1]
+func acceleration_curve(delta:float, current_speed:float) -> float:
+	var new_speed = current_speed * acceleration[0] + acceleration[1]
 	if new_speed <= max_speed:
 		return new_speed
 	else:
 		return max_speed
 
-func speed_up(delta:float):
-	
-	
-	return 
+func speed_up(delta:float) -> bool:
+	"""Returns true if it changed speed"""
+	var old_speed = self.speed
+	self.speed = acceleration_curve(delta, old_speed)
+	return old_speed != self.speed
+
+#¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
+# Helper functions
+#¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
 
 func change_road(new_road:Path3D):
 	self.reparent(new_road)
@@ -139,7 +149,6 @@ func change_road(new_road:Path3D):
 	for road in current_roads:
 		var road_children = road.get_children() 
 		cars_on_same_road.append_array(road_children)
-
 	return
 
 # Intializer for new car objects/nodes
