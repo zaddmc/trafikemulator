@@ -11,11 +11,10 @@ static var CROSSINGS_DICT
 # Internal varibles for each car object
 var max_speed: float
 var speed: float
+var wanted_space:float
 var current_road: Path3D
 var current_roads = []
-var cars_on_same_road = []
-var closest_car = null
-var wanted_space:float
+#var cars_on_same_road = [] #it will be removed assuming it doesnt do anything needed
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -53,12 +52,12 @@ func update_car(delta: float) -> void:
 	var distance_to_crossing = current_road_length - self.get_progress()
 	
 	# Determine if next crossing contains cars on other paths
-	var crossings_contains_invalid_cars:bool = false
+	var crossing_contains_invalid_cars:bool = false
 	if crossing.is_in_group("TrafficLights"):
 		for road in CROSSINGS_DICT[crossing]:
 			if road in ROAD_DICT[current_road]: continue
 			if road.get_child_count() != 0:
-				crossings_contains_invalid_cars = true
+				crossing_contains_invalid_cars = true
 				break
 
 	# Determine if next traffic light is green
@@ -68,29 +67,7 @@ func update_car(delta: float) -> void:
 	#=================================
 	# Logic for speed settings
 	#=================================
-	# Stop for light crossing, given different conditions
-	if (not is_light_green # If the crossing is red, hold back
-	#or not shortest_incoming # If there is anyone in the crossing, that will intersect it # it shouldnt be neccesary due to next line
-	or crossings_contains_invalid_cars): # if there is cars in the crossing
-		slow_down(delta)
-
-	elif (shortest_distance - self.get_progress() < wanted_space * 2 and shortest_distance - self.get_progress() > wanted_space and self.speed > 2):
-		self.speed = self.speed -0.2
-
-
-	elif shortest_distance - self.get_progress() < wanted_space:
-		if self.speed > 1.5:
-			self.speed *= 0.6*delta
-		elif self.speed <= 1:
-			self.speed = 0
-
-	else:
-		if self.speed < 1:
-			self.speed = 1
-		elif self.speed > self.max_speed:
-			self.speed += 6*delta
-		else:
-			self.speed = self.max_speed
+	determine_speed(delta)
 
 	# Update distance on road
 	self.set_progress(self.get_progress() + speed * delta)
@@ -103,10 +80,22 @@ func update_car(delta: float) -> void:
 #¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
 # Functions related to speed manegement
 #¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
+func determine_speed(delta:float):
+	
+	
+	if is_road_crossing(delta):
+		pass #check crossing
+	
+	
+	return
+
+func is_road_crossing(road):
+	
+	return false
 
 var de_acceleration # def = [0.9, 0.1] # First part of acceleration is multiplier and second is constant aswell as the minimum value before flatlining zero
 func de_acceleration_curve(delta:float, current_speed:float) -> float:
-	var new_speed = current_speed * de_acceleration[0] + de_acceleration[1]
+	var new_speed = current_speed * de_acceleration[0] - de_acceleration[1]
 	if new_speed >= de_acceleration[1]:
 		return new_speed
 	else:
@@ -141,14 +130,14 @@ func change_road(new_road:Path3D):
 	self.set_progress_ratio(0)
 	current_road = new_road
 
-	cars_on_same_road = []
+	#cars_on_same_road = []
 	current_roads = []
 	current_roads.append(new_road)
 	current_roads.append_array(ROAD_DICT[new_road])
 	
-	for road in current_roads:
-		var road_children = road.get_children() 
-		cars_on_same_road.append_array(road_children)
+	#for road in current_roads:
+		#var road_children = road.get_children() 
+		#cars_on_same_road.append_array(road_children)
 	return
 
 # Intializer for new car objects/nodes

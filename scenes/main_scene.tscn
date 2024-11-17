@@ -12,8 +12,11 @@ lights_on = true
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1.19249e-08, 1, 0, -1, 1.19249e-08, -0.47068, 53.5385, -2.60332)
+h_offset = -136.65
+v_offset = 7.095
 projection = 1
-size = 547.795
+current = true
+size = 363.955
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.691677, 0.722207, 0, -0.722207, 0.691677, 0, 18, 0)
